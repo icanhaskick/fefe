@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fefe - Retro Desktop</title>
+    <style>
+        /* --- Reset Básico --- */
+        * {
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        @font-face {
+            font-family: 'Windows95';
+            src: url('W95FA.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            font-family: 'Windows95', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            background: url('img.png') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        /* --- Estilo Geral das Janelas --- */
+        .window {
+            position: absolute;
+            background-color: #c0c0c0;
+            border: 2px solid;
+            border-color: #dfdfdf #404040 #404040 #dfdfdf;
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.2), 6px 6px 10px rgba(0,0,0,0.5);
+            display: flex; 
+            flex-direction: column;
+            padding: 3px;
+            display: none;
+        }
+
+        /* Janela Principal (sempre visível no inicio via JS) */
+        #main-window {
+            display: flex;
+            width: 400px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1.4);
+            transform-origin: center center;
+            z-index: 10;
+        }
+
+        #about-window {
+            width: 320px;
+            top: 40%;
+            left: 35%;
+            transform: scale(1.4);
+            z-index: 10;
+        }
+
+        #image-window {
+            width: auto;
+            max-width: 200px;
+            top: 45%;
+            left: 55%;
+            transform: scale(1.4);
+            z-index: 10;
+        }
+
+        /* Janela Lista de Posts */
+        #posts-list-window {
+            width: 350px;
+            height: 300px;
+            top: 30%;
+            left: 30%;
+            transform: scale(1.4);
+            z-index: 10;
+        }
+
+        /* Janela Conteúdo do Post */
+        #post-content-window {
+            width: 400px;
+            height: 400px;
+            top: 25%;
+            left: 45%;
+            transform: scale(1.4);
+            z-index: 10;
+        }
+
+        .title-bar {
+            background: #000080;
+            padding: 3px 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+            cursor: default;
+        }
+
+        .title-bar:active {
+            cursor: move;
+        }
+
+        .title-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: white;
+            font-weight: bold;
+            font-size: 13px;
+            pointer-events: none;
+        }
+
+        .window-icon {
+            width: 16px;
+            height: 16px;
+            background-image: url('folder.png');
+            background-size: contain;
+            background-position: center;
+        }
+
+        .controls {
+            display: flex;
+            gap: 2px;
+        }
+
+        .btn {
+            width: 16px;
+            height: 14px;
+            background-color: #c0c0c0;
+            border: 1px solid;
+            border-color: #fff #404040 #404040 #fff;
+            font-size: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: monospace;
+            cursor: pointer;
+        }
+        
+        .btn:active {
+            border-color: #404040 #fff #fff #404040;
+        }
+
+        .window-body {
+            background-color: white;
+            border: 2px solid;
+            border-color: #404040 #dfdfdf #dfdfdf #404040;
+            padding: 20px;
+            overflow: auto;
+            flex-grow: 1;
+        }
+        
+        #main-window .window-body {
+            height: 250px;
+            flex-grow: 0;
+        }
+
+        #image-window .window-body {
+            padding: 2px;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 0;
+        }
+
+        #display-img-element {
+            max-height: 180px;
+            display: block;
+        }
+
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            text-align: center;
+        }
+
+        .icon-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .icon-img {
+            height: 50px;
+            width: 50px;
+            image-rendering: pixelated;
+        }
+
+        .icon-label {
+            font-size: 11px;
+            color: black;
+            padding: 1px 3px;
+        }
+
+        .status-bar {
+            margin-top: 4px;
+            padding: 2px 5px;
+            font-size: 11px;
+            color: #444;
+            border: 1px solid;
+            border-color: #404040 #dfdfdf #dfdfdf #404040;
+            background: #c0c0c0;
+        }
+
+        .about-content {
+            display: block;
+            font-size: 13px;
+            line-height: 1.3;
+            text-align: justify;
+        }
+
+        .about-img {
+            float: left;
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            margin-right: 15px; 
+            margin-bottom: 5px;
+        }
+
+        .about-content h3 {
+            margin: 0 0 5px 0;
+            font-size: 16px;
+            text-decoration: underline;
+        }
+        
+        .about-content ul {
+            padding-left: 20px;
+            margin: 5px 0;
+        }
+        
+        .about-content li {
+            margin-bottom: 2px;
+        }
+
+        .post-list {
+            list-style-type: square; 
+            padding-left: 20px;
+            margin: 0;
+        }
+
+        .post-list li {
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .post-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            width: 100%;
+        }
+
+        .post-link {
+            color: blue;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        .post-link:active {
+            color: red;
+        }
+
+        .post-date {
+            font-size: 12px;
+            color: #555;
+            font-family: monospace;
+            white-space: nowrap; 
+        }
+
+        .post-content-area h2 {
+            margin-top: 0;
+            font-size: 18px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+
+        .post-content-area p {
+            font-size: 14px;
+            line-height: 1.4;
+            text-align: justify;
+        }
+        
+        .post-meta-date {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+        /* =========================================
+           MEDIA QUERIES PARA MOBILE / RESPONSIVIDADE
+           ========================================= */
+        @media (max-width: 768px) {
+            .window {
+                transform: scale(1) !important;
+            }
+
+            /* No mobile, o cursor não indica que é arrastável */
+            .title-bar:active {
+                cursor: default;
+            }
+
+            #main-window {
+                width: 95vw;
+                transform: translate(-50%, -50%) scale(1) !important;
+            }
+
+            #about-window {
+                width: 90vw;
+                left: 5% !important; 
+                top: 10% !important;
+            }
+
+            #image-window {
+                width: 90vw;
+                max-width: none;
+                left: 5% !important;
+                top: 15% !important;
+            }
+
+            #posts-list-window {
+                width: 95vw;
+                left: 2.5% !important;
+                top: 10% !important;
+            }
+
+            #post-content-window {
+                width: 95vw;
+                height: fit-content; 
+                left: 2.5% !important;
+                top: 5% !important;
+            }
+
+            .icon-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+	    #main-window .window-body {
+		height: 350px;
+		flex-grow: 0;
+	    }
+
+            .title-bar {
+                padding: 6px 4px; 
+            }
+
+            .btn {
+                width: 20px;
+                height: 18px; 
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="window" id="main-window">
+        <div class="title-bar">
+            <div class="title-wrapper">
+                <div class="window-icon"></div> <span>oieee</span>
+            </div>
+            <div class="controls"></div>
+        </div>
+
+        <div class="window-body">
+            <div class="icon-grid">
+                <div class="icon-item" id="btn-open-eu">
+                    <img src="fefe.gif" class="icon-img">
+                    <div class="icon-label">Eu</div>
+                </div>
+                
+                <div class="icon-item" id="btn-open-posts">
+                    <img src="blog.png" class="icon-img">
+                    <div class="icon-label">Posts</div>
+                </div>
+
+                <div class="icon-item" id="btn-open-image-window">
+                    <img src="blog.png" class="icon-img">
+                    <div class="icon-label">GOAT</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            3 objeto(s)
+        </div>
+    </div>
+
+    <div class="window" id="about-window">
+        <div class="title-bar">
+            <div class="title-wrapper">
+                <div class="window-icon" style="background-image: url('fefe.gif');"></div> 
+                <span>Sobre Mim</span>
+            </div>
+            <div class="controls">
+                <div class="btn" id="btn-close-about">x</div>
+            </div>
+        </div>
+
+        <div class="window-body">
+            <div class="about-content">
+                <img src="fefe.gif" class="about-img">
+                
+                <h3>Quem sou eu?</h3>
+                <p>Olá! Me chamo Fefe.</p>
+                <p>Aqui é meu cantinho onde irei postar o que quiser quando quiser.</p>
+                
+                <ul>
+                    <li><strong>Pokemons Favoritos:</strong>
+                        <ul>
+                            <li>Mimikyu</li>
+                            <li>Zangoose</li>
+                            <li>Zeraora</li>
+                        </ul>
+                    </li>
+                    <br>
+                    <li><strong>Artistas Favoritos:</strong>
+                        <ul>
+                            <li>Death Grips</li>
+                            <li>Imogen Heap</li>
+                            <li>Burial</li>
+                            <li>Massive Attack</li>
+                            <li>Aphex Twin</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="window" id="image-window">
+        <div class="title-bar">
+            <div class="title-wrapper">
+                <div class="window-icon" style="background-image: url('blog.png');"></div> 
+                <span>GOAT</span>
+            </div>
+            <div class="controls">
+                <div class="btn" id="btn-close-image">x</div>
+            </div>
+        </div>
+        <div class="window-body">
+            <img src="" id="display-img-element" alt="Imagem">
+        </div>
+    </div>
+
+    <div class="window" id="posts-list-window">
+        <div class="title-bar">
+            <div class="title-wrapper">
+                <div class="window-icon" style="background-image: url('blog.png');"></div> 
+                <span>Posts</span>
+            </div>
+            <div class="controls">
+                <div class="btn" id="btn-close-posts-list">x</div>
+            </div>
+        </div>
+        <div class="window-body">
+            <ul class="post-list" id="post-list-ul">
+                </ul>
+        </div>
+        <div class="status-bar" id="posts-status-bar">
+            0 posts
+        </div>
+    </div>
+
+    <div class="window" id="post-content-window">
+        <div class="title-bar">
+            <div class="title-wrapper">
+                <div class="window-icon" style="background-image: url('blog.png');"></div> 
+                <span id="window-title-post">Leitura</span>
+            </div>
+            <div class="controls">
+                <div class="btn" id="btn-close-post-content">x</div>
+            </div>
+        </div>
+        <div class="window-body">
+            <div class="post-content-area">
+                <h2 id="post-title-display">Título do Post</h2>
+                <div class="post-meta-date" id="post-date-display"></div>
+                <div id="post-body-display">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const imagemParaExibir = "zangoose.png"; 
+
+        const blogPosts = [
+            {
+                title: "Carcaça",
+                date: "01/04/26",
+                content: "<p>Nós mal sabemos</p><p>quem bem somos nesse momento</p><p>e que por si só</p><p>estar e ser é uma experiência divina</p><p>tão divina</p><p>todos presos nessa carcaça</p><p>carcaça de carne</p><p>me faz lembrar de que eu não estou sozinho</p><p>nessa carcaça</p><p>carcaça de carne</p><p>me faz lembrar de que essa dor é uma ilusão.</p>"
+            },
+        ];
+
+        const mainWin = document.getElementById("main-window");
+        const aboutWin = document.getElementById("about-window");
+        const imageWin = document.getElementById("image-window");
+        const postsListWin = document.getElementById("posts-list-window");
+        const postContentWin = document.getElementById("post-content-window");
+
+        const displayImg = document.getElementById("display-img-element");
+        const allWindows = [mainWin, aboutWin, imageWin, postsListWin, postContentWin];
+
+        function bringToFront(el) {
+            allWindows.forEach(win => win.style.zIndex = 10);
+            el.style.zIndex = 20;
+        }
+
+        function makeDraggable(windowElement, handleElement) {
+            let newX = 0, newY = 0, startX = 0, startY = 0;
+
+            handleElement.addEventListener('mousedown', dragMouseDown);
+
+            function dragMouseDown(e) {
+                if (window.innerWidth <= 768) {
+                    bringToFront(windowElement); // Apenas traz para frente
+                    return; 
+                }
+
+                e.preventDefault();
+                startX = e.clientX;
+                startY = e.clientY;
+                bringToFront(windowElement); 
+                document.addEventListener('mousemove', elementDrag);
+                document.addEventListener('mouseup', closeDragElement);
+            }
+
+            function elementDrag(e) {
+                e.preventDefault();
+                newX = startX - e.clientX;
+                newY = startY - e.clientY;
+                startX = e.clientX;
+                startY = e.clientY;
+                
+                windowElement.style.left = (windowElement.offsetLeft - newX) + 'px';
+                windowElement.style.top = (windowElement.offsetTop - newY) + 'px';
+            }
+
+            function closeDragElement() {
+                document.removeEventListener('mousemove', elementDrag);
+                document.removeEventListener('mouseup', closeDragElement);
+            }
+        }
+
+        allWindows.forEach(win => {
+            win.addEventListener('mousedown', () => bringToFront(win));
+            win.addEventListener('touchstart', () => bringToFront(win), { passive: true });
+            
+            const titleBar = win.querySelector('.title-bar');
+            if (titleBar) {
+                makeDraggable(win, titleBar);
+            }
+        });
+
+        const postsListUl = document.getElementById('post-list-ul');
+        const postTitleDisplay = document.getElementById('post-title-display');
+        const postDateDisplay = document.getElementById('post-date-display');
+        const postBodyDisplay = document.getElementById('post-body-display');
+        const postsStatusBar = document.getElementById('posts-status-bar');
+
+        function renderPosts() {
+            postsListUl.innerHTML = ""; 
+            postsStatusBar.innerText = `${blogPosts.length} post(s) encontrado(s)`;
+
+            blogPosts.forEach((post, index) => {
+                const li = document.createElement('li');
+                
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'post-row';
+
+                const titleSpan = document.createElement('span');
+                titleSpan.className = 'post-link';
+                titleSpan.innerText = post.title;
+                
+                titleSpan.addEventListener('click', () => {
+                    openPostContent(index);
+                });
+
+                const dateSpan = document.createElement('span');
+                dateSpan.className = 'post-date';
+                dateSpan.innerText = post.date;
+
+                rowDiv.appendChild(titleSpan);
+                rowDiv.appendChild(dateSpan);
+                
+                li.appendChild(rowDiv);
+                postsListUl.appendChild(li);
+            });
+        }
+
+        function openPostContent(index) {
+            const post = blogPosts[index];
+            postTitleDisplay.innerText = post.title;
+            postDateDisplay.innerText = "Postado em: " + post.date;
+            postBodyDisplay.innerHTML = post.content;
+            
+            postContentWin.style.display = 'flex';
+            bringToFront(postContentWin);
+        }
+
+        renderPosts();
+        
+        document.getElementById("btn-open-eu").addEventListener('click', () => {
+            aboutWin.style.display = 'flex';
+            bringToFront(aboutWin);
+        });
+        document.getElementById("btn-close-about").addEventListener('click', () => {
+            aboutWin.style.display = 'none';
+        });
+
+        document.getElementById("btn-open-posts").addEventListener('click', () => {
+            postsListWin.style.display = 'flex';
+            bringToFront(postsListWin);
+        });
+        document.getElementById("btn-close-posts-list").addEventListener('click', () => {
+            postsListWin.style.display = 'none';
+        });
+        document.getElementById("btn-close-post-content").addEventListener('click', () => {
+            postContentWin.style.display = 'none';
+        });
+
+        document.getElementById("btn-open-image-window").addEventListener('click', () => {
+            displayImg.src = imagemParaExibir; 
+            imageWin.style.display = 'flex';
+            bringToFront(imageWin);
+        });
+        document.getElementById("btn-close-image").addEventListener('click', () => {
+            imageWin.style.display = 'none';
+        });
+
+    </script>
+
+</body>
+</html>
