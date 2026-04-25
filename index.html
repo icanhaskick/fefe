@@ -62,11 +62,21 @@
             z-index: 10;
         }
 
+        /* --- MODIFICADO: Janelas de imagem com tamanho fixo no desktop --- */
         #image-window {
-            width: auto;
-            max-width: 200px;
+            width: 250px; /* Tamanho fixo */
+            height: 250px; /* Tamanho fixo */
             top: 45%;
             left: 55%;
+            transform: scale(1.4);
+            z-index: 10;
+        }
+
+        #lembrete-window {
+            width: 280px; /* Tamanho fixo */
+            height: 200px; /* Tamanho fixo */
+            top: 50%;
+            left: 50%;
             transform: scale(1.4);
             z-index: 10;
         }
@@ -160,17 +170,25 @@
             flex-grow: 0;
         }
 
-        #image-window .window-body {
+        #image-window .window-body,
+        #lembrete-window .window-body {
             padding: 2px;
             background-color: #000;
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-grow: 0;
+            flex-grow: 1; /* Permite que o body cresça para preencher a janela fixa */
+            overflow: hidden; /* Garante que nada vaze e não crie scrolls */
         }
 
-        #display-img-element {
-            max-height: 180px;
+        /* --- MODIFICADO: Imagens fluidas dentro do contêiner --- */
+        #display-img-element,
+        #display-lembrete-element {
+            /* max-height: 180px;  <- REMOVIDO */
+            max-width: 100%; /* Não ultrapassa a largura da janela */
+            max-height: 100%; /* Não ultrapassa a altura da janela */
+            width: auto; /* Mantém proporção */
+            height: auto; /* Mantém proporção */
             display: block;
         }
 
@@ -325,8 +343,17 @@
             #image-window {
                 width: 90vw;
                 max-width: none;
+                height: auto; /* Volta para automático no mobile */
                 left: 5% !important;
                 top: 15% !important;
+            }
+
+            #lembrete-window {
+                width: 90vw;
+                max-width: none;
+                height: auto; /* Volta para automático no mobile */
+                left: 5% !important;
+                top: 18% !important;
             }
 
             #posts-list-window {
@@ -347,10 +374,10 @@
                 gap: 15px;
             }
 
-	    #main-window .window-body {
-		height: 350px;
-		flex-grow: 0;
-	    }
+            #main-window .window-body {
+                height: 350px;
+                flex-grow: 0;
+            }
 
             .title-bar {
                 padding: 6px 4px; 
@@ -387,14 +414,19 @@
                 </div>
 
                 <div class="icon-item" id="btn-open-image-window">
-                    <img src="blog.png" class="icon-img">
+                    <img src="image_icon.png" class="icon-img">
                     <div class="icon-label">GOAT</div>
+                </div>
+
+                <div class="icon-item" id="btn-open-lembrete-window">
+                    <img src="lembrete.png" class="icon-img">
+                    <div class="icon-label">É bom lembrar</div>
                 </div>
             </div>
         </div>
 
         <div class="status-bar">
-            3 objeto(s)
+            4 objeto(s)
         </div>
     </div>
 
@@ -443,7 +475,7 @@
     <div class="window" id="image-window">
         <div class="title-bar">
             <div class="title-wrapper">
-                <div class="window-icon" style="background-image: url('blog.png');"></div> 
+                <div class="window-icon" style="background-image: url('image_icon.png');"></div> 
                 <span>GOAT</span>
             </div>
             <div class="controls">
@@ -452,6 +484,21 @@
         </div>
         <div class="window-body">
             <img src="" id="display-img-element" alt="Imagem">
+        </div>
+    </div>
+
+    <div class="window" id="lembrete-window">
+        <div class="title-bar">
+            <div class="title-wrapper">
+                <div class="window-icon" style="background-image: url('lembrete.png');"></div> 
+                <span>É bom lembrar</span>
+            </div>
+            <div class="controls">
+                <div class="btn" id="btn-close-lembrete">x</div>
+            </div>
+        </div>
+        <div class="window-body">
+            <img src="protecttranskids.jpg" id="display-lembrete-element" alt="Lembrete">
         </div>
     </div>
 
@@ -509,11 +556,14 @@
         const mainWin = document.getElementById("main-window");
         const aboutWin = document.getElementById("about-window");
         const imageWin = document.getElementById("image-window");
+        const lembreteWin = document.getElementById("lembrete-window"); // Novo
         const postsListWin = document.getElementById("posts-list-window");
         const postContentWin = document.getElementById("post-content-window");
 
         const displayImg = document.getElementById("display-img-element");
-        const allWindows = [mainWin, aboutWin, imageWin, postsListWin, postContentWin];
+        
+        // Adicionando a nova janela no array para herdar as propriedades (trazer para a frente, arrastar, etc)
+        const allWindows = [mainWin, aboutWin, imageWin, lembreteWin, postsListWin, postContentWin];
 
         function bringToFront(el) {
             allWindows.forEach(win => win.style.zIndex = 10);
@@ -640,6 +690,15 @@
         });
         document.getElementById("btn-close-image").addEventListener('click', () => {
             imageWin.style.display = 'none';
+        });
+
+        // Controles da Nova Janela Lembrete
+        document.getElementById("btn-open-lembrete-window").addEventListener('click', () => {
+            lembreteWin.style.display = 'flex';
+            bringToFront(lembreteWin);
+        });
+        document.getElementById("btn-close-lembrete").addEventListener('click', () => {
+            lembreteWin.style.display = 'none';
         });
 
     </script>
