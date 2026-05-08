@@ -43,7 +43,7 @@
             display: none;
         }
 
-        /* Janela Principal (sempre visível no inicio via JS) */
+        /* Janela Principal */
         #main-window {
             display: flex;
             width: 400px;
@@ -62,10 +62,9 @@
             z-index: 10;
         }
 
-        /* --- MODIFICADO: Janelas de imagem com tamanho fixo no desktop --- */
         #image-window {
-            width: 250px; /* Tamanho fixo */
-            height: 250px; /* Tamanho fixo */
+            width: 250px; 
+            height: 250px; 
             top: 45%;
             left: 55%;
             transform: scale(1.4);
@@ -73,15 +72,14 @@
         }
 
         #lembrete-window {
-            width: 280px; /* Tamanho fixo */
-            height: 200px; /* Tamanho fixo */
+            width: 280px; 
+            height: 200px; 
             top: 50%;
             left: 50%;
             transform: scale(1.4);
             z-index: 10;
         }
 
-        /* Janela Lista de Posts */
         #posts-list-window {
             width: 350px;
             height: 300px;
@@ -91,12 +89,21 @@
             z-index: 10;
         }
 
-        /* Janela Conteúdo do Post */
         #post-content-window {
             width: 400px;
             height: 400px;
             top: 25%;
             left: 45%;
+            transform: scale(1.4);
+            z-index: 10;
+        }
+
+        /* Janela: Paint */
+        #paint-window {
+            width: 450px;
+            height: 450px;
+            top: 15%;
+            left: 15%;
             transform: scale(1.4);
             z-index: 10;
         }
@@ -177,19 +184,77 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-grow: 1; /* Permite que o body cresça para preencher a janela fixa */
-            overflow: hidden; /* Garante que nada vaze e não crie scrolls */
+            flex-grow: 1; 
+            overflow: hidden; 
         }
 
-        /* --- MODIFICADO: Imagens fluidas dentro do contêiner --- */
         #display-img-element,
         #display-lembrete-element {
-            /* max-height: 180px;  <- REMOVIDO */
-            max-width: 100%; /* Não ultrapassa a largura da janela */
-            max-height: 100%; /* Não ultrapassa a altura da janela */
-            width: auto; /* Mantém proporção */
-            height: auto; /* Mantém proporção */
+            max-width: 100%; 
+            max-height: 100%; 
+            width: auto; 
+            height: auto; 
             display: block;
+        }
+
+        /* --- ESTILOS DO PAINT --- */
+        #paint-window .window-body {
+            padding: 2px;
+            display: flex;
+            flex-direction: column;
+            background-color: #c0c0c0;
+            overflow: hidden;
+        }
+
+        .paint-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 5px;
+            font-size: 11px;
+            border-bottom: 2px solid #dfdfdf;
+            align-items: center;
+        }
+
+        .paint-toolbar label {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .paint-toolbar input[type="range"] {
+            width: 50px;
+        }
+
+        .paint-toolbar input[type="color"] {
+            width: 20px;
+            height: 20px;
+            padding: 0;
+            border: 1px solid #404040;
+            cursor: pointer;
+        }
+
+        .paint-toolbar button {
+            font-family: 'Windows95', Tahoma, sans-serif;
+            font-size: 11px;
+            cursor: pointer;
+            border: 1px solid;
+            border-color: #fff #404040 #404040 #fff;
+            background: #c0c0c0;
+        }
+
+        .paint-toolbar button:active {
+            border-color: #404040 #fff #fff #404040;
+        }
+
+        #paint-canvas {
+            background-color: white;
+            flex-grow: 1;
+            cursor: crosshair;
+            touch-action: none; 
+            border: 2px solid;
+            border-color: #404040 #dfdfdf #dfdfdf #404040;
+	   image-rendering: pixelated;
         }
 
         .icon-grid {
@@ -316,15 +381,11 @@
             font-style: italic;
         }
 
-        /* =========================================
-           MEDIA QUERIES PARA MOBILE / RESPONSIVIDADE
-           ========================================= */
         @media (max-width: 768px) {
             .window {
                 transform: scale(1) !important;
             }
 
-            /* No mobile, o cursor não indica que é arrastável */
             .title-bar:active {
                 cursor: default;
             }
@@ -343,7 +404,7 @@
             #image-window {
                 width: 90vw;
                 max-width: none;
-                height: auto; /* Volta para automático no mobile */
+                height: auto; 
                 left: 5% !important;
                 top: 15% !important;
             }
@@ -351,7 +412,7 @@
             #lembrete-window {
                 width: 90vw;
                 max-width: none;
-                height: auto; /* Volta para automático no mobile */
+                height: auto; 
                 left: 5% !important;
                 top: 18% !important;
             }
@@ -367,6 +428,13 @@
                 height: fit-content; 
                 left: 2.5% !important;
                 top: 5% !important;
+            }
+
+            #paint-window {
+                width: 95vw;
+                height: 80vh;
+                left: 2.5% !important;
+                top: 10% !important;
             }
 
             .icon-grid {
@@ -422,11 +490,47 @@
                     <img src="lembrete.png" class="icon-img">
                     <div class="icon-label">É bom lembrar</div>
                 </div>
+
+                <div class="icon-item" id="btn-open-paint-window">
+                    <img src="paint.png" class="icon-img">
+                    <div class="icon-label">Paint</div>
+                </div>
             </div>
         </div>
 
         <div class="status-bar">
-            4 objeto(s)
+            5 objeto(s)
+        </div>
+    </div>
+
+    <div class="window" id="paint-window">
+        <div class="title-bar">
+            <div class="title-wrapper">
+                <div class="window-icon" style="background-image: url('paint.png');"></div> 
+                <span>Paint</span>
+            </div>
+            <div class="controls">
+                <div class="btn" id="btn-close-paint">x</div>
+            </div>
+        </div>
+        <div class="window-body">
+            <div class="paint-toolbar">
+                <div style="display: flex; gap: 8px;">
+                    <label><input type="radio" name="paint-tool" value="pen" checked> Caneta</label>
+                    <label><input type="radio" name="paint-tool" value="highlighter"> Marca-texto</label>
+                    <label><input type="radio" name="paint-tool" value="eraser"> Borracha</label>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <label title="Tamanho do pincel">Tamanho: <input type="range" id="paint-size" min="1" max="40" value="5"></label>
+                    <label title="Intensidade da tremedeira animada">Tremor: <input type="range" id="paint-jitter" min="0" max="15" value="4"></label>
+                </div>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <label title="Cor da Caneta">Caneta <input type="color" id="color-pen" value="#000000"></label>
+                    <label title="Cor do Marca-Texto">Marca <input type="color" id="color-highlighter" value="#ffff00"></label>
+                    <button id="btn-clear-canvas">Limpar Tudo</button>
+                </div>
+            </div>
+            <canvas id="paint-canvas"></canvas>
         </div>
     </div>
 
@@ -540,9 +644,7 @@
             </div>
         </div>
     </div>
-
-
-    <script>
+<script>
         const imagemParaExibir = "zangoose.png"; 
 
         const blogPosts = [
@@ -556,14 +658,14 @@
         const mainWin = document.getElementById("main-window");
         const aboutWin = document.getElementById("about-window");
         const imageWin = document.getElementById("image-window");
-        const lembreteWin = document.getElementById("lembrete-window"); // Novo
+        const lembreteWin = document.getElementById("lembrete-window"); 
+        const paintWin = document.getElementById("paint-window"); 
         const postsListWin = document.getElementById("posts-list-window");
         const postContentWin = document.getElementById("post-content-window");
 
         const displayImg = document.getElementById("display-img-element");
         
-        // Adicionando a nova janela no array para herdar as propriedades (trazer para a frente, arrastar, etc)
-        const allWindows = [mainWin, aboutWin, imageWin, lembreteWin, postsListWin, postContentWin];
+        const allWindows = [mainWin, aboutWin, imageWin, lembreteWin, paintWin, postsListWin, postContentWin];
 
         function bringToFront(el) {
             allWindows.forEach(win => win.style.zIndex = 10);
@@ -577,7 +679,7 @@
 
             function dragMouseDown(e) {
                 if (window.innerWidth <= 768) {
-                    bringToFront(windowElement); // Apenas traz para frente
+                    bringToFront(windowElement); 
                     return; 
                 }
 
@@ -664,6 +766,7 @@
 
         renderPosts();
         
+        // --- LOGICA DE ABERTURA DAS JANELAS ---
         document.getElementById("btn-open-eu").addEventListener('click', () => {
             aboutWin.style.display = 'flex';
             bringToFront(aboutWin);
@@ -692,7 +795,6 @@
             imageWin.style.display = 'none';
         });
 
-        // Controles da Nova Janela Lembrete
         document.getElementById("btn-open-lembrete-window").addEventListener('click', () => {
             lembreteWin.style.display = 'flex';
             bringToFront(lembreteWin);
@@ -701,7 +803,172 @@
             lembreteWin.style.display = 'none';
         });
 
-    </script>
 
-</body>
-</html>
+        // ==========================================
+        // LÓGICA DO PAINT APP (ANIMADO / LINE BOIL)
+        // ==========================================
+        const canvas = document.getElementById('paint-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let isDrawing = false;
+        let canvasInitialized = false;
+        
+        // Memória dos traços desenhados
+        let strokes = [];
+        let currentStroke = null;
+        
+        // Controle de FPS para dar a sensação de animação real (ex: 15 fps)
+        let lastDrawTime = 0;
+        const fps = 15;
+        const frameInterval = 1000 / fps;
+
+        const toolRadios = document.getElementsByName('paint-tool');
+        const sizeSlider = document.getElementById('paint-size');
+        const jitterSlider = document.getElementById('paint-jitter');
+        const colorPen = document.getElementById('color-pen');
+        const colorHigh = document.getElementById('color-highlighter');
+
+        document.getElementById("btn-open-paint-window").addEventListener('click', () => {
+            paintWin.style.display = 'flex';
+            bringToFront(paintWin);
+            
+            if (!canvasInitialized) {
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+                canvasInitialized = true;
+            }
+        });
+
+        document.getElementById("btn-close-paint").addEventListener('click', () => {
+            paintWin.style.display = 'none';
+        });
+
+        // O botão agora apenas deleta a memória dos traços e limpa o frame
+        document.getElementById("btn-clear-canvas").addEventListener('click', () => {
+            strokes = []; 
+        });
+
+    function getPointerPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            
+            // Calcula a proporção entre o tamanho interno do canvas e o tamanho renderizado na tela
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+
+            // Multiplica as posições pela escala para corrigir o offset do transform: scale()
+            return { 
+                x: (clientX - rect.left) * scaleX, 
+                y: (clientY - rect.top) * scaleY 
+            };
+        }
+
+        function startDrawing(e) {
+            isDrawing = true;
+            const pos = getPointerPos(e);
+            const activeTool = Array.from(toolRadios).find(r => r.checked).value;
+            
+            currentStroke = {
+                tool: activeTool,
+                color: activeTool === 'pen' ? colorPen.value : colorHigh.value,
+                size: parseInt(sizeSlider.value),
+                points: [pos]
+            };
+            
+            strokes.push(currentStroke);
+        }
+
+        function draw(e) {
+            if (!isDrawing || !currentStroke) return;
+            e.preventDefault(); 
+            currentStroke.points.push(getPointerPos(e));
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+            currentStroke = null;
+        }
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        canvas.addEventListener('touchstart', startDrawing);
+        canvas.addEventListener('touchmove', draw, { passive: false });
+        canvas.addEventListener('touchend', stopDrawing);
+
+        // --- LOOP DE ANIMAÇÃO ---
+        function renderAnimation(timestamp) {
+            requestAnimationFrame(renderAnimation);
+            
+            if (!canvasInitialized || paintWin.style.display === 'none') return;
+
+            // Roda a X frames por segundo
+            if (timestamp - lastDrawTime > frameInterval) {
+                
+                // 1. Limpa o canvas base deixando-o TRANSPARENTE
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                const jitterIntensity = parseInt(jitterSlider.value);
+
+                // 2. Redesenha todos os traços armazenados com um offset aleatório novo em cada frame
+                strokes.forEach(stroke => {
+                    if (stroke.points.length === 0) return;
+
+                    ctx.lineWidth = stroke.size;
+                    ctx.lineCap = 'round';
+                    ctx.lineJoin = 'round';
+
+                    // Define configurações da ferramenta salva naquele traço
+                    if (stroke.tool === 'pen') {
+                        ctx.strokeStyle = stroke.color;
+                        ctx.globalAlpha = 1.0;
+                        ctx.globalCompositeOperation = 'source-over'; // Caneta sempre sobrepõe
+                    } else if (stroke.tool === 'highlighter') {
+                        ctx.strokeStyle = stroke.color;
+                        ctx.globalAlpha = 0.5; // A saturação que você escolheu
+                        ctx.globalCompositeOperation = 'destination-over'; // Marca-texto sempre escorrega para trás da caneta
+                    } else if (stroke.tool === 'eraser') {
+                        ctx.strokeStyle = 'white';
+                        ctx.globalAlpha = 1.0;
+                        ctx.globalCompositeOperation = 'destination-out'; // Borracha "fura" o desenho, apagando de verdade
+                    }
+
+                    ctx.beginPath();
+                    stroke.points.forEach((pt, index) => {
+                        let jx = 0;
+                        let jy = 0;
+                        
+                        // Aplica a tremedeira
+                        if (jitterIntensity > 0) {
+                            jx = (Math.random() - 0.5) * jitterIntensity;
+                            jy = (Math.random() - 0.5) * jitterIntensity;
+                        }
+
+                        if (index === 0) {
+                            ctx.moveTo(pt.x + jx, pt.y + jy);
+                        } else {
+                            ctx.lineTo(pt.x + jx, pt.y + jy);
+                        }
+                    });
+                    ctx.stroke(); // Pinta o caminho desenhado
+                });
+
+                // 3. Pinta o fundo branco como se fosse a folha de papel (por trás de tudo)
+                ctx.globalCompositeOperation = 'destination-over';
+                ctx.globalAlpha = 1.0;
+                ctx.fillStyle = "white";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                lastDrawTime = timestamp;
+            }
+        }
+        
+        // Dispara o loop
+        requestAnimationFrame(renderAnimation);
+
+</script>
+    </body>
+    </html>
