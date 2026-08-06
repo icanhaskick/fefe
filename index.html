@@ -98,7 +98,6 @@
             z-index: 10;
         }
 
-        /* Janela: Paint */
         #paint-window {
             width: 450px;
             height: 450px;
@@ -197,7 +196,6 @@
             display: block;
         }
 
-        /* --- ESTILOS DO PAINT --- */
         #paint-window .window-body {
             padding: 2px;
             display: flex;
@@ -254,7 +252,7 @@
             touch-action: none; 
             border: 2px solid;
             border-color: #404040 #dfdfdf #dfdfdf #404040;
-	   image-rendering: pixelated;
+            image-rendering: pixelated;
         }
 
         .icon-grid {
@@ -464,7 +462,7 @@
     <div class="window" id="main-window">
         <div class="title-bar">
             <div class="title-wrapper">
-                <div class="window-icon"></div> <span>oieee</span>
+                <div class="window-icon"></div> <span>Hiiiii</span>
             </div>
             <div class="controls"></div>
         </div>
@@ -473,7 +471,7 @@
             <div class="icon-grid">
                 <div class="icon-item" id="btn-open-eu">
                     <img src="fefe.gif" class="icon-img">
-                    <div class="icon-label">Eu</div>
+                    <div class="icon-label">About me</div>
                 </div>
                 
                 <div class="icon-item" id="btn-open-posts">
@@ -488,7 +486,7 @@
 
                 <div class="icon-item" id="btn-open-lembrete-window">
                     <img src="lembrete.png" class="icon-img">
-                    <div class="icon-label">É bom lembrar</div>
+                    <div class="icon-label">Reminder</div>
                 </div>
 
                 <div class="icon-item" id="btn-open-paint-window">
@@ -499,7 +497,7 @@
         </div>
 
         <div class="status-bar">
-            5 objeto(s)
+            5 object(s)
         </div>
     </div>
 
@@ -516,18 +514,18 @@
         <div class="window-body">
             <div class="paint-toolbar">
                 <div style="display: flex; gap: 8px;">
-                    <label><input type="radio" name="paint-tool" value="pen" checked> Caneta</label>
-                    <label><input type="radio" name="paint-tool" value="highlighter"> Marca-texto</label>
-                    <label><input type="radio" name="paint-tool" value="eraser"> Borracha</label>
+                    <label><input type="radio" name="paint-tool" value="pen" checked> Pen</label>
+                    <label><input type="radio" name="paint-tool" value="highlighter"> Highlight</label>
+                    <label><input type="radio" name="paint-tool" value="eraser"> Eraser</label>
                 </div>
                 <div style="display: flex; gap: 8px;">
-                    <label title="Tamanho do pincel">Tamanho: <input type="range" id="paint-size" min="1" max="40" value="5"></label>
-                    <label title="Intensidade da tremedeira animada">Tremor: <input type="range" id="paint-jitter" min="0" max="15" value="4"></label>
+                    <label title="Pen size">Size: <input type="range" id="paint-size" min="1" max="40" value="5"></label>
+                    <label title="Jitter intensity">Jitter: <input type="range" id="paint-jitter" min="0" max="15" value="4"></label>
                 </div>
                 <div style="display: flex; gap: 8px; align-items: center;">
-                    <label title="Cor da Caneta">Caneta <input type="color" id="color-pen" value="#000000"></label>
-                    <label title="Cor do Marca-Texto">Marca <input type="color" id="color-highlighter" value="#ffff00"></label>
-                    <button id="btn-clear-canvas">Limpar Tudo</button>
+                    <label title="Pen color">Pen <input type="color" id="color-pen" value="#000000"></label>
+                    <label title="Highlight color">Highlight <input type="color" id="color-highlighter" value="#ffff00"></label>
+                    <button id="btn-clear-canvas">Clear</button>
                 </div>
             </div>
             <canvas id="paint-canvas"></canvas>
@@ -538,7 +536,7 @@
         <div class="title-bar">
             <div class="title-wrapper">
                 <div class="window-icon" style="background-image: url('fefe.gif');"></div> 
-                <span>Sobre Mim</span>
+                <span>About me</span>
             </div>
             <div class="controls">
                 <div class="btn" id="btn-close-about">x</div>
@@ -549,12 +547,12 @@
             <div class="about-content">
                 <img src="fefe.gif" class="about-img">
                 
-                <h3>Quem sou eu?</h3>
-                <p>Olá! Me chamo Fefe.</p>
-                <p>Aqui é meu cantinho onde irei postar o que quiser quando quiser.</p>
+                <h3>Who am i?</h3>
+                <p>Hey there, i'm Nezu!</p>
+                <p>Welcome to my webpage (it's like my bedroom, but on the internet)</p>
                 
                 <ul>
-                    <li><strong>Pokemons Favoritos:</strong>
+                    <li><strong>Favorite pokemons:</strong>
                         <ul>
                             <li>Mimikyu</li>
                             <li>Zangoose</li>
@@ -562,7 +560,7 @@
                         </ul>
                     </li>
                     <br>
-                    <li><strong>Artistas Favoritos:</strong>
+                    <li><strong>Favorite artists:</strong>
                         <ul>
                             <li>Death Grips</li>
                             <li>Imogen Heap</li>
@@ -595,7 +593,7 @@
         <div class="title-bar">
             <div class="title-wrapper">
                 <div class="window-icon" style="background-image: url('lembrete.png');"></div> 
-                <span>É bom lembrar</span>
+                <span>Reminder</span>
             </div>
             <div class="controls">
                 <div class="btn" id="btn-close-lembrete">x</div>
@@ -649,9 +647,9 @@
 
         const blogPosts = [
             {
-                title: "Carcaça",
-                date: "01/04/26",
-                content: "<p>Nós mal sabemos</p><p>quem bem somos nesse momento</p><p>e que por si só</p><p>estar e ser é uma experiência divina</p><p>tão divina</p><p>todos presos nessa carcaça</p><p>carcaça de carne</p><p>me faz lembrar de que eu não estou sozinho</p><p>nessa carcaça</p><p>carcaça de carne</p><p>me faz lembrar de que essa dor é uma ilusão.</p>"
+                title: "Plans",
+                date: "06/08/26",
+                content: "<p>Plans</p>"
             },
         ];
 
@@ -757,7 +755,7 @@
         function openPostContent(index) {
             const post = blogPosts[index];
             postTitleDisplay.innerText = post.title;
-            postDateDisplay.innerText = "Postado em: " + post.date;
+            postDateDisplay.innerText = "Posted: " + post.date;
             postBodyDisplay.innerHTML = post.content;
             
             postContentWin.style.display = 'flex';
@@ -766,7 +764,6 @@
 
         renderPosts();
         
-        // --- LOGICA DE ABERTURA DAS JANELAS ---
         document.getElementById("btn-open-eu").addEventListener('click', () => {
             aboutWin.style.display = 'flex';
             bringToFront(aboutWin);
@@ -804,20 +801,15 @@
         });
 
 
-        // ==========================================
-        // LÓGICA DO PAINT APP (ANIMADO / LINE BOIL)
-        // ==========================================
         const canvas = document.getElementById('paint-canvas');
         const ctx = canvas.getContext('2d');
         
         let isDrawing = false;
         let canvasInitialized = false;
         
-        // Memória dos traços desenhados
         let strokes = [];
         let currentStroke = null;
         
-        // Controle de FPS para dar a sensação de animação real (ex: 15 fps)
         let lastDrawTime = 0;
         const fps = 15;
         const frameInterval = 1000 / fps;
@@ -843,7 +835,6 @@
             paintWin.style.display = 'none';
         });
 
-        // O botão agora apenas deleta a memória dos traços e limpa o frame
         document.getElementById("btn-clear-canvas").addEventListener('click', () => {
             strokes = []; 
         });
@@ -853,11 +844,9 @@
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
             
-            // Calcula a proporção entre o tamanho interno do canvas e o tamanho renderizado na tela
             const scaleX = canvas.width / rect.width;
             const scaleY = canvas.height / rect.height;
 
-            // Multiplica as posições pela escala para corrigir o offset do transform: scale()
             return { 
                 x: (clientX - rect.left) * scaleX, 
                 y: (clientY - rect.top) * scaleY 
@@ -899,21 +888,17 @@
         canvas.addEventListener('touchmove', draw, { passive: false });
         canvas.addEventListener('touchend', stopDrawing);
 
-        // --- LOOP DE ANIMAÇÃO ---
         function renderAnimation(timestamp) {
             requestAnimationFrame(renderAnimation);
             
             if (!canvasInitialized || paintWin.style.display === 'none') return;
 
-            // Roda a X frames por segundo
             if (timestamp - lastDrawTime > frameInterval) {
                 
-                // 1. Limpa o canvas base deixando-o TRANSPARENTE
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
                 const jitterIntensity = parseInt(jitterSlider.value);
 
-                // 2. Redesenha todos os traços armazenados com um offset aleatório novo em cada frame
                 strokes.forEach(stroke => {
                     if (stroke.points.length === 0) return;
 
@@ -921,19 +906,18 @@
                     ctx.lineCap = 'round';
                     ctx.lineJoin = 'round';
 
-                    // Define configurações da ferramenta salva naquele traço
                     if (stroke.tool === 'pen') {
                         ctx.strokeStyle = stroke.color;
                         ctx.globalAlpha = 1.0;
-                        ctx.globalCompositeOperation = 'source-over'; // Caneta sempre sobrepõe
+                        ctx.globalCompositeOperation = 'source-over';
                     } else if (stroke.tool === 'highlighter') {
                         ctx.strokeStyle = stroke.color;
-                        ctx.globalAlpha = 0.5; // A saturação que você escolheu
-                        ctx.globalCompositeOperation = 'destination-over'; // Marca-texto sempre escorrega para trás da caneta
+                        ctx.globalAlpha = 0.5;
+                        ctx.globalCompositeOperation = 'destination-over';
                     } else if (stroke.tool === 'eraser') {
                         ctx.strokeStyle = 'white';
                         ctx.globalAlpha = 1.0;
-                        ctx.globalCompositeOperation = 'destination-out'; // Borracha "fura" o desenho, apagando de verdade
+                        ctx.globalCompositeOperation = 'destination-out';
                     }
 
                     ctx.beginPath();
@@ -953,10 +937,9 @@
                             ctx.lineTo(pt.x + jx, pt.y + jy);
                         }
                     });
-                    ctx.stroke(); // Pinta o caminho desenhado
+                    ctx.stroke();
                 });
 
-                // 3. Pinta o fundo branco como se fosse a folha de papel (por trás de tudo)
                 ctx.globalCompositeOperation = 'destination-over';
                 ctx.globalAlpha = 1.0;
                 ctx.fillStyle = "white";
@@ -966,7 +949,6 @@
             }
         }
         
-        // Dispara o loop
         requestAnimationFrame(renderAnimation);
 
 </script>
