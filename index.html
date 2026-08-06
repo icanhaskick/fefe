@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>fefe</title>
+    <title>nezu</title>
     <style>
         * {
             box-sizing: border-box;
@@ -627,7 +627,7 @@
         <div class="title-bar">
             <div class="title-wrapper">
                 <div class="window-icon" style="background-image: url('blog.png');"></div> 
-                <span id="window-title-post">Leitura</span>
+                <span id="window-title-post">Post</span>
             </div>
             <div class="controls">
                 <div class="btn" id="btn-close-post-content">x</div>
@@ -647,9 +647,14 @@
 
         const blogPosts = [
             {
-                title: "Plans",
+                title: "Fixed plan",
                 date: "06/08/26",
-                content: "<p>Plans</p>"
+                    content: "<p>Customized single page website for your needs for a fixed price.</p><p><strong>Price range</strong>:</p><p>$150 to $350 (according to your application)</p><p><strong>Process</strong></p><ul><li>You share your idea</li><li>I make a figma prototype</li><li>We iterate over the design</li><li>When the design is agreed upon, i start coding</li></ul><p><strong>This plan doesn't offer future support or updates for your application once the development is finished</strong></p><p>I make sure to send progress during the development process.</p><a href=https://x.com/nezudeveloper>Dm me!</a>",
+            },
+            {
+                title: "Subscription plan",
+                date: "06/08/26",
+                    content: "<p>Customized single page website for your needs, including support and updates.</p><p><strong>Price</strong>:</p><p>$80 upfront + 20/mo</p><p><strong>Process</strong></p><ul><li>You share your idea</li><li>I make a figma prototype</li><li>We iterate over the design</li><li>When the design is agreed upon, i start coding</li></ul><p>I make sure to send progress during the development process.</p><a href=https://x.com/nezudeveloper>Dm me!</a>"
             },
         ];
 
@@ -724,7 +729,7 @@
 
         function renderPosts() {
             postsListUl.innerHTML = ""; 
-            postsStatusBar.innerText = `${blogPosts.length} post(s) encontrado(s)`;
+            postsStatusBar.innerText = `${blogPosts.length} post(s) found`;
 
             blogPosts.forEach((post, index) => {
                 const li = document.createElement('li');
